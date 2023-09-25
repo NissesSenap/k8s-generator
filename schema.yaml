@@ -1,0 +1,57 @@
+kind: service
+version: v1aplha1
+metadata:
+  name: hello-world
+  label:
+    team: platform
+    service: hello
+spec:
+  # env decides if PDB and, anntiaffinity etc should be generate by default
+  env: production
+  app:
+    type: # You can probably be both at the same time, thats why I use a list.
+      - pubsub
+      - httpAPI # if httpAPI, a service will be created
+    language: scala
+    image: flux:v2
+    resources:
+      request:
+        memory: 128Mi
+        cpu: 500m
+      limits:
+        memory: 256Mi
+    ports:
+      http: 8080
+      metrics: 9090
+    env: # same implementation as the API, plus a number of default values depending on language
+      name: stuff
+      value: "true"
+    volume: #the entire api
+    volumeMounts: # the entire api
+    hpa:
+      minReplicas: 2 # default value if env=prod
+      maxReplicas: 3 # default value if env=prod
+      behavior: # full config, seems to be used in many locations
+      cpu:
+        averageUtilization: 80
+      memory:
+        averageUtilization: 80
+      pubsub: # will generate keda instead of hpa, this will probably be hard ^^
+        waiting_msg: 20 # many options, maybe this should just be configured through the KEDA API
+  secret:
+    remoteName: ninjagcpSecret
+    secretKey: creds.json
+    secretName: secret1
+    clustersecretstore: clustersecretstore-gke #default value
+  ingress: # Only enabled if defined, if we change ingress we can easily change this api. Is the ingress API simple enough for us to not provide the whole thing?
+    url: hello.example.com
+    wildcardCert: true # default, is a secret that exist in the same namespace
+    annotation:
+      ingressNginx: annotationsAreSoMuchFun
+  # In deployment resource anything from app can be overwritten.
+  deployment:
+    containers:
+      - name: container2
+  keda: stuff # the entire api
+  iamPolicy:
+    servicAccount: overwriteMe # will automaitcally be the same as the application name + env prefix, ie: prod-hello-world
