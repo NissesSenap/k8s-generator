@@ -1,3 +1,6 @@
+// Copyright 2023 The Kubernetes Authors.
+// SPDX-License-Identifier: Apache-2.0
+
 package dispatcher
 
 import (
@@ -21,15 +24,16 @@ func NewCommand() *cobra.Command {
 
 func processKnownAPIGroups(rl *framework.ResourceList) error {
 	p := framework.VersionedAPIProcessor{FilterProvider: framework.GVKFilterMap{
-		"ExampleApp": map[string](kio.Filter){
-			"platfrom.example.com/v1alpha1": &v1alpha1.ExampleApp{},
+		"ExampleApp": map[string]kio.Filter{
+			"platform.example.com/v1alpha1": &v1alpha1.ExampleApp{},
 		},
 	}}
-
 	if err := p.Process(rl); err != nil {
 		return errors.Wrap(err)
 	}
 	var err error
+	// FormatFilter sorts the fields in a deterministic order, which makes the output
+	// more suitable for review in version control.
 	rl.Items, err = filters.FormatFilter{UseSchema: true}.Filter(rl.Items)
 	if err != nil {
 		return errors.WrapPrefixf(err, "formatting output")

@@ -1,3 +1,8 @@
+#!/usr/bin/env bash
+# Copyright 2023 The Kubernetes Authors.
+# SPDX-License-Identifier: Apache-2.0
+
+
 set -eo pipefail
 
 # This generates a useful starting point for a CRD that can be used for validation.

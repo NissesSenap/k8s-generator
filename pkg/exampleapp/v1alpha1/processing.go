@@ -1,3 +1,6 @@
+// Copyright 2023 The Kubernetes Authors.
+// SPDX-License-Identifier: Apache-2.0
+
 package v1alpha1
 
 import (
@@ -35,7 +38,6 @@ func (a *ExampleApp) Default() error {
 			a.Workloads.WebWorkers[i].Resources = ResourceBinSizeSmall
 		}
 	}
-
 	for i := range a.Workloads.JobWorkers {
 		if a.Workloads.JobWorkers[i].Replicas == nil {
 			a.Workloads.JobWorkers[i].Replicas = func() *int { one := 1; return &one }()
