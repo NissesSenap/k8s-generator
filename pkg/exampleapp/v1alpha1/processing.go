@@ -1,6 +1,7 @@
 package v1alpha1
 
 import (
+	"bytes"
 	"embed"
 	"encoding/json"
 	"fmt"
@@ -89,7 +90,67 @@ metadata:
 		}))
 	}
 
+	if len(a.Overrides.AdditionalResources) > 0 {
+		templates = append(templates, framework.ResourceTemplate{
+			Templates:    parser.TemplateFiles(a.Overrides.AdditionalResources...).WithExtensions(".yaml", ".template.yaml"),
+			TemplateData: a,
+		})
+	}
+
+	for i, resource := range a.Overrides.ResourcePatches {
+		overridePatches, err := a.resourceSMPsFromOverrides(resource, i, patches)
+		if err != nil {
+			return nil, err
+		}
+		patches = append(patches, overridePatches...)
+	}
+
+	if len(a.Overrides.ContainerPatches) > 0 {
+		patches = append(patches, framework.PatchTemplate(&framework.ContainerPatchTemplate{
+			Templates:    parser.TemplateFiles(a.Overrides.ContainerPatches...).WithExtensions(".yaml", ".template.yaml"),
+			TemplateData: a,
+		}))
+	}
+
+	items, err := framework.TemplateProcessor{
+		ResourceTemplates: templates,
+		PatchTemplates:    patches,
+	}.Filter(items)
+	if err != nil {
+		return nil, errors.WrapPrefixf(err, "processing templates")
+	}
+
 	return items, nil
+}
+
+// resourceSMPsFromOverrides parses the resource template and returns a patch that
+// is targeted to match resources with the same GVKNN the patch itself contains.
+// TODO: This is standard SMP semantics, so the framework should make this easier.
+func (a ExampleApp) resourceSMPsFromOverrides(resource string, i int, patches []framework.PatchTemplate) ([]framework.PatchTemplate, error) {
+	tpl, err := parser.TemplateFiles(resource).WithExtensions(".yaml", ".template.yaml").Parse()
+	if err != nil {
+		return nil, errors.WrapPrefixf(err, "parsing resource template %d", i)
+	}
+	for _, template := range tpl {
+		var b bytes.Buffer
+		if err := template.Execute(&b, a); err != nil {
+			return nil, errors.WrapPrefixf(err, "failed to render patch template %v", template.DefinedTemplates())
+		}
+		var id yaml.ResourceMeta
+		err := yaml.Unmarshal(b.Bytes(), &id)
+		if err != nil {
+			return nil, errors.WrapPrefixf(err, "failed to unmarshal resource identifier from %v", template.DefinedTemplates())
+		}
+		selector := framework.MatchAll(
+			framework.GVKMatcher(strings.Join([]string{id.APIVersion, id.Kind}, "/")), framework.NameMatcher(id.Name),
+			framework.NamespaceMatcher(id.Namespace))
+		selector.FailOnEmptyMatch = true
+		patches = append(patches, framework.PatchTemplate(&framework.ResourcePatchTemplate{
+			Templates: parser.TemplateFiles(a.Overrides.ResourcePatches...).WithExtensions(".yaml", ".template.yaml"),
+			Selector:  selector,
+		}))
+	}
+	return patches, nil
 }
 
 type resourceBucket struct {
@@ -136,6 +197,8 @@ func (a ExampleApp) jobWorkerTemplateData(w JobWorker) map[string]interface{} {
 		"Environment":     a.Env,
 	}
 }
+
+const containerPort = 8080
 
 func (a ExampleApp) webWorkerTemplateData(w WebWorker) map[string]interface{} {
 	resourcesJson, err := json.Marshal(resourceBucketConversion[w.Resources])
