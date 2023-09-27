@@ -1,0 +1,20 @@
+apiVersion: config.kubernetes.io/v1
+kind: ResourceList
+items:
+  - apiVersion: app.innoq.com/v1
+    kind: App
+    metadata:
+      name: hello
+    spec:
+      size: medium
+      image: test:123
+      port: 8080
+functionConfig:
+  apiVersion: app.innoq.com/v1
+  kind: App
+  metadata:
+    name: hello
+  spec:
+    size: medium
+    image: test:123
+    port: 8080
