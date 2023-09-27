@@ -6,7 +6,7 @@ package v1alpha1_test
 import (
 	"testing"
 
-	"github.com/NissesSenap/k8s-generator/pkg/exampleapp/dispatcher"
+	"github.com/NissesSenap/k8s-generator/pkg/dispatcher"
 	"sigs.k8s.io/kustomize/kyaml/fn/framework/frameworktestutil"
 )
 

@@ -3,7 +3,7 @@
 
 package main
 
-import "github.com/NissesSenap/k8s-generator/pkg/exampleapp/dispatcher"
+import "github.com/NissesSenap/k8s-generator/pkg/dispatcher"
 
 func main() {
 	_ = dispatcher.NewCommand().Execute()
