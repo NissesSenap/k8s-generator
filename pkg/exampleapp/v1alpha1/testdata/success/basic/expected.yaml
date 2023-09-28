@@ -1,12 +1,10 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: simple-app-sample
   labels:
-    app: simple-app-sample
     env: production
-    type: pubsub
+    app: simple-app-sample
 spec:
   replicas: 3
   selector:
@@ -18,10 +16,10 @@ spec:
         app: simple-app-sample
     spec:
       containers:
-        - name: app
-          image: registry.example.com/path/to/simple-app-sample
-          args:
-            - web
-          env:
-            - name: ENV
-              value: production
+      - name: app
+        image: registry.example.com/path/to/simple-app-sample
+        args:
+        - web
+        env:
+        - name: ENV
+          value: production

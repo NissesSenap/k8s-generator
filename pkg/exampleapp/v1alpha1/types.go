@@ -53,9 +53,11 @@ type App struct {
 }
 
 type Ingress struct {
-	Domain       string            `json:"domain" yaml:"domain"`
-	WildcardCert bool              `json:"wildcardCert" yaml:"wildcardCert"`
-	Annotations  map[string]string `json:"annotations" yaml:"annotations"`
+	Domain string `json:"domain" yaml:"domain"`
+	// +optional
+	WildcardCert bool `json:"wildcardCert" yaml:"wildcardCert"`
+	// +optional
+	Annotations map[string]string `json:"annotations" yaml:"annotations"`
 }
 
 // +kubebuilder:validation:MinProperties=1

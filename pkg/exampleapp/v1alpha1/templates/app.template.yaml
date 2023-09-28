@@ -1,12 +1,10 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ .Name }}
   labels:
-    app: {{ .Name }}
     env: {{ .Environment }}
-    type: {{ .AppType }}
+    app: {{ .Name }}
 spec:
   replicas: {{ .Replicas }}
   selector:

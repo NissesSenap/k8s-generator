@@ -66,9 +66,7 @@ spec:
               wildcardCert:
                 type: boolean
             required:
-            - annotations
             - domain
-            - wildcardCert
             type: object
           kind:
             description: 'Kind is a string value representing the REST resource this
