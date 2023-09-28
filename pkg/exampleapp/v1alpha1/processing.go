@@ -36,13 +36,16 @@ func (a *ExampleApp) Default() error {
 		a.App.Replicas = 1
 	}
 
+	if a.Ingress.Path == "" {
+		a.Ingress.Path = "/"
+	}
 	return nil
 }
 
 func (a *ExampleApp) Validate() error {
-	if a.Ingress.Domain != "" {
-		if !strings.HasSuffix(a.Ingress.Domain, "example.com") && !strings.HasSuffix(a.Ingress.Domain, "example.io") {
-			return errors.Errorf("ingress %q must be in example.com or example.io", a.Ingress.Domain)
+	if a.Ingress.URL != "" {
+		if !strings.HasSuffix(a.Ingress.URL, "example.com") && !strings.HasSuffix(a.Ingress.URL, "example.io") {
+			return errors.Errorf("ingress %q must be in example.com or example.io", a.Ingress.URL)
 		}
 	}
 

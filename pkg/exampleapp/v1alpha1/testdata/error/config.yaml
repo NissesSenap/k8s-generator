@@ -9,5 +9,5 @@ app:
   image: registry.example.com/path/to/simple-app-sample
   language: scala
 ingress:
-  domain: example.se
+  url: hello.example.se
   dont-exist: true

@@ -53,7 +53,9 @@ type App struct {
 }
 
 type Ingress struct {
-	Domain string `json:"domain" yaml:"domain"`
+	URL string `json:"url" yaml:"url"`
+	// +optional
+	Path string `json:"path" yaml:"path"`
 	// +optional
 	WildcardCert bool `json:"wildcardCert" yaml:"wildcardCert"`
 	// +optional

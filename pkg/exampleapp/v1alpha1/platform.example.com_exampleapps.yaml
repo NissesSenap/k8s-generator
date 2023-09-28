@@ -61,12 +61,12 @@ spec:
                 additionalProperties:
                   type: string
                 type: object
-              domain:
+              url:
                 type: string
               wildcardCert:
                 type: boolean
             required:
-            - domain
+            - url
             type: object
           kind:
             description: 'Kind is a string value representing the REST resource this
