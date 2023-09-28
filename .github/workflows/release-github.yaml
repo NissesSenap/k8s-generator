@@ -36,7 +36,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ghcr.io/nissessenap/app-fn
+          images: ghcr.io/nissessenap/k8s-generator
           tags: type=raw,value=${{ steps.prep.outputs.VERSION }}
       - name: Publish multi-arch image
         uses: docker/build-push-action@v5
@@ -47,5 +47,5 @@ jobs:
           context: .
           file: ./Dockerfile
           platforms: linux/amd64
-          tags: ghcr.io/nissessenap/app-fn:${{ steps.prep.outputs.VERSION }}
+          tags: ghcr.io/nissessenap/k8s-generator:${{ steps.prep.outputs.VERSION }}
           labels: ${{ steps.meta.outputs.labels }}
