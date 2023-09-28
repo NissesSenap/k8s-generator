@@ -37,7 +37,7 @@ type ExampleApp struct {
 	App App `json:"app" yaml:"app"`
 
 	// +optional
-	Ingress Ingress `json:"Ingress" yaml:"Ingress"`
+	Ingress Ingress `json:"ingress" yaml:"ingress"`
 	// +optional
 	Overrides Overrides `json:"overrides,omitempty" yaml:"overrides,omitempty"`
 }
@@ -45,9 +45,9 @@ type ExampleApp struct {
 type App struct {
 	AppType []string `json:"appType" yaml:"appType"`
 	// +optional
-	Image string `json:"Image" yaml:"Image"`
+	Image string `json:"image" yaml:"image"`
 	// +kubebuilder:validation:Enum=scala;python;npm;rust;go
-	Language string `json:"Language" yaml:"Language"`
+	Language string `json:"language" yaml:"language"`
 	// +optional
 	Replicas int `json:"replicas" yaml:"replicas"`
 }

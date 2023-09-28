@@ -40,9 +40,12 @@ func (a *ExampleApp) Default() error {
 }
 
 func (a *ExampleApp) Validate() error {
-	if !strings.HasSuffix(a.Ingress.Domain, "example.com") && !strings.HasSuffix(a.Ingress.Domain, "example.io") {
-		return errors.Errorf("ingress %q must be in example.com or example.io", a.Ingress.Domain)
+	if a.Ingress.Domain != "" {
+		if !strings.HasSuffix(a.Ingress.Domain, "example.com") && !strings.HasSuffix(a.Ingress.Domain, "example.io") {
+			return errors.Errorf("ingress %q must be in example.com or example.io", a.Ingress.Domain)
+		}
 	}
+
 	return nil
 }
 

@@ -4,6 +4,7 @@ metadata:
   name: simple-app-sample
 env: production
 app:
-  appType: pubsub
+  appType:
+    - pubsub
   image: registry.example.com/path/to/simple-app-sample
   language: scala

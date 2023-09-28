@@ -20,7 +20,41 @@ spec:
       openAPIV3Schema:
         additionalProperties: false
         properties:
-          Ingress:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          app:
+            additionalProperties: false
+            properties:
+              appType:
+                items:
+                  type: string
+                type: array
+              image:
+                type: string
+              language:
+                enum:
+                - scala
+                - python
+                - npm
+                - rust
+                - go
+                type: string
+              replicas:
+                type: integer
+            required:
+            - appType
+            - language
+            type: object
+          env:
+            enum:
+            - production
+            - staging
+            - ephemeral
+            type: string
+          ingress:
             additionalProperties: false
             properties:
               annotations:
@@ -36,40 +70,6 @@ spec:
             - domain
             - wildcardCert
             type: object
-          apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-            type: string
-          app:
-            additionalProperties: false
-            properties:
-              Image:
-                type: string
-              Language:
-                enum:
-                - scala
-                - python
-                - npm
-                - rust
-                - go
-                type: string
-              appType:
-                items:
-                  type: string
-                type: array
-              replicas:
-                type: integer
-            required:
-            - Language
-            - appType
-            type: object
-          env:
-            enum:
-            - production
-            - staging
-            - ephemeral
-            type: string
           kind:
             description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
