@@ -31,9 +31,13 @@ func (a *ExampleApp) Default() error {
 	}
 	switch a.Env {
 	case "production":
-		a.App.Replicas = 3
+		if a.App.Replicas == 0 {
+			a.App.Replicas = 3
+		}
 	case "staging":
-		a.App.Replicas = 1
+		if a.App.Replicas == 0 {
+			a.App.Replicas = 1
+		}
 	}
 
 	if a.Ingress.Path == "" {
