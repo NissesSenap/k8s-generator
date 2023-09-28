@@ -12,5 +12,7 @@ app:
 overrides:
   additionalResources:
     - custom-configmap.yaml
+  resourcePatches:
+    - web-worker-sidecar.yaml
   containerPatches:
     - custom-app-env.yaml
