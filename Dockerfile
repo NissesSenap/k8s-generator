@@ -4,7 +4,7 @@ WORKDIR /go/src/
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-RUN go build -ldflags '-w -s' -v -o /usr/local/bin/function ./
+RUN go build -ldflags '-w -s' -v -o /usr/local/bin/function ./cmd
 
 FROM alpine:latest
 COPY --from=builder /usr/local/bin/function /usr/local/bin/function
