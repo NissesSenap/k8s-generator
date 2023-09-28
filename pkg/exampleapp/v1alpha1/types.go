@@ -31,19 +31,30 @@ type ExampleApp struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata"`
 
-	// +kubebuilder:validation:Enum=production;staging;development
+	// +kubebuilder:validation:Enum=production;staging;ephemeral
 	Env string `json:"env" yaml:"env"`
 
-	// +optional
-	AppImage string `json:"appImage" yaml:"appImage"`
-
-	Workloads Workloads `json:"workloads" yaml:"workloads"`
+	App App `json:"app" yaml:"app"`
 
 	// +optional
-	Datastores Datastores `json:"datastores,omitempty" yaml:"datastores,omitempty"`
-
+	Ingress Ingress `json:"Ingress" yaml:"Ingress"`
 	// +optional
 	Overrides Overrides `json:"overrides,omitempty" yaml:"overrides,omitempty"`
+}
+
+type App struct {
+	// +optional
+	Image   string   `json:"Image" yaml:"Image"`
+	AppType []string `json:"appType" yaml:"appType"`
+	// +kubebuilder:validation:Enum=scala;python;npm;rust;go
+	Language string `json:"Language" yaml:"Language"`
+	Replicas int    `json:"replicas" yaml:"replicas"`
+}
+
+type Ingress struct {
+	Domain       string            `json:"domain" yaml:"domain"`
+	WildcardCert bool              `json:"wildcardCert" yaml:"wildcardCert"`
+	Annotations  map[string]string `json:"annotations" yaml:"annotations"`
 }
 
 // +kubebuilder:validation:MinProperties=1
@@ -56,56 +67,4 @@ type Overrides struct {
 
 	// +optional
 	ContainerPatches []string `json:"containerPatches,omitempty" yaml:"containerPatches,omitempty"`
-}
-
-// +kubebuilder:validation:MinProperties=1
-type Workloads struct {
-	// +optional
-	JobWorkers []JobWorker `json:"jobWorkers,omitempty" yaml:"jobWorkers,omitempty"`
-
-	// +optional
-	WebWorkers []WebWorker `json:"webWorkers,omitempty" yaml:"webWorkers,omitempty"`
-}
-
-// +kubebuilder:validation:Pattern="^[a-z0-9](?:[-a-z0-9]*[a-z0-9])?(?:\\.[a-z0-9](?:[-a-z0-9]*[a-z0-9])?)*$"
-type KubernetesMetaName string
-
-type JobWorker struct {
-	Name KubernetesMetaName `json:"name" yaml:"name"`
-
-	// +kubebuilder:validation:Minimum=0
-	// +optional
-	Replicas *int `json:"replicas,omitempty" yaml:"replicas,omitempty"`
-
-	// +optional
-	Resources ResourceBinSize `json:"resources,omitempty" yaml:"resources,omitempty"`
-
-	// +kubebuilder:validation:UniqueItems=true
-	// +kubebuilder:validation:MinItems=1
-	Queues []string `json:"queues" yaml:"queues"`
-}
-
-// +kubebuilder:validation:Enum=small;medium;large
-type ResourceBinSize string
-
-const ResourceBinSizeSmall ResourceBinSize = "small"
-
-type WebWorker struct {
-	Name KubernetesMetaName `json:"name" yaml:"name"`
-
-	// +kubebuilder:validation:Minimum=0
-	// +optional
-	Replicas *int `json:"replicas,omitempty" yaml:"replicas,omitempty"`
-
-	// +optional
-	Resources ResourceBinSize `json:"resources,omitempty" yaml:"resources,omitempty"`
-
-	// +kubebuilder:validation:UniqueItems=true
-	// +kubebuilder:validation:MinItems=1
-	Domains []string `json:"domains" yaml:"domains"`
-}
-
-type Datastores struct {
-	// +optional
-	PostgresInstance string `json:"postgresInstance,omitempty" yaml:"postgresInstance,omitempty"`
 }

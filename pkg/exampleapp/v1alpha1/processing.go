@@ -27,37 +27,22 @@ func (a *ExampleApp) Schema() (*spec.Schema, error) {
 }
 
 func (a *ExampleApp) Default() error {
-	if a.AppImage == "" {
-		a.AppImage = fmt.Sprintf("registry.example.com/path/to/%s", a.ObjectMeta.Name)
+	if a.App.Image == "" {
+		a.App.Image = fmt.Sprintf("registry.example.com/path/to/%s", a.ObjectMeta.Name)
 	}
-	for i := range a.Workloads.WebWorkers {
-		if a.Workloads.WebWorkers[i].Replicas == nil {
-			a.Workloads.WebWorkers[i].Replicas = func() *int { three := 3; return &three }()
-		}
-		if a.Workloads.WebWorkers[i].Resources == "" {
-			a.Workloads.WebWorkers[i].Resources = ResourceBinSizeSmall
-		}
+	switch a.Env {
+	case "production":
+		a.App.Replicas = 3
+	case "staging":
+		a.App.Replicas = 1
 	}
-	for i := range a.Workloads.JobWorkers {
-		if a.Workloads.JobWorkers[i].Replicas == nil {
-			a.Workloads.JobWorkers[i].Replicas = func() *int { one := 1; return &one }()
-		}
-		if a.Workloads.JobWorkers[i].Resources == "" {
-			a.Workloads.JobWorkers[i].Resources = ResourceBinSizeSmall
-		}
-	}
+
 	return nil
 }
 
 func (a *ExampleApp) Validate() error {
-	seenDomains := make(map[string]bool)
-	for i, worker := range a.Workloads.WebWorkers {
-		for _, domain := range worker.Domains {
-			if seenDomains[domain] {
-				return errors.Errorf("duplicate domain %q in worker %d", domain, i)
-			}
-			seenDomains[domain] = true
-		}
+	if !strings.HasSuffix(a.Ingress.Domain, "example.com") && !strings.HasSuffix(a.Ingress.Domain, "example.io") {
+		return errors.Errorf("ingress %q must be in example.com or example.io", a.Ingress.Domain)
 	}
 	return nil
 }
