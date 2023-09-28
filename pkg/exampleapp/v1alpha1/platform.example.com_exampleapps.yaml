@@ -63,7 +63,6 @@ spec:
             required:
             - Language
             - appType
-            - replicas
             type: object
           env:
             enum:

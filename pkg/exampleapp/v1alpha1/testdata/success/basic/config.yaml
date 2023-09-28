@@ -7,4 +7,3 @@ app:
   appType: pubsub
   image: registry.example.com/path/to/simple-app-sample
   language: scala
-  replicas: 3

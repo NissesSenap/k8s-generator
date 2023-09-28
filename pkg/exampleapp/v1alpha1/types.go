@@ -48,7 +48,8 @@ type App struct {
 	Image string `json:"Image" yaml:"Image"`
 	// +kubebuilder:validation:Enum=scala;python;npm;rust;go
 	Language string `json:"Language" yaml:"Language"`
-	Replicas int    `json:"replicas" yaml:"replicas"`
+	// +optional
+	Replicas int `json:"replicas" yaml:"replicas"`
 }
 
 type Ingress struct {
