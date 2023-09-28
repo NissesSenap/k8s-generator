@@ -59,6 +59,8 @@ type Ingress struct {
 	// +optional
 	WildcardCert bool `json:"wildcardCert" yaml:"wildcardCert"`
 	// +optional
+	TLSSecret string `json:"tlsSecret" yaml:"tlsSecret"`
+	// +optional
 	Annotations map[string]string `json:"annotations" yaml:"annotations"`
 }
 

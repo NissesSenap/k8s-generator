@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Name }}
+spec:
+  # if env is prd, use nginx-prd
+  ingressClassName: nginx-prd
+  tls:
+    - hosts:
+        - {{ .URL }}
+      secretName: {{ .TLSSecret }}
+  rules:
+    - host: {{ .URL }}
+      http:
+        paths:
+          - path: {{ .Path }}
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Name }}
+                port:
+                  name: http

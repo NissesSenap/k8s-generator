@@ -39,6 +39,9 @@ func (a *ExampleApp) Default() error {
 	if a.Ingress.Path == "" {
 		a.Ingress.Path = "/"
 	}
+	if a.Ingress.WildcardCert && a.Ingress.TLSSecret == "" {
+		a.Ingress.TLSSecret = "wilrdcar-tls"
+	}
 	return nil
 }
 
@@ -58,6 +61,13 @@ func (a ExampleApp) Filter(items []*yaml.RNode) ([]*yaml.RNode, error) {
 		Templates:    parser.TemplateFiles("templates/app.template.yaml").FromFS(templateFS),
 		TemplateData: a.appTemplateData(a.App),
 	})
+
+	if a.Ingress.URL != "" {
+		templates = append(templates, framework.ResourceTemplate{
+			Templates:    parser.TemplateFiles("templates/ingress.template.yaml").FromFS(templateFS),
+			TemplateData: a.ingressTemplateData(a.Ingress),
+		})
+	}
 
 	var patches []framework.PatchTemplate
 
@@ -131,5 +141,15 @@ func (a ExampleApp) appTemplateData(w App) map[string]interface{} {
 		"Image":       w.Image,
 		"Name":        a.ObjectMeta.Name,
 		"Replicas":    w.Replicas,
+	}
+}
+
+func (a ExampleApp) ingressTemplateData(w Ingress) map[string]interface{} {
+	return map[string]interface{}{
+		"Environment": a.Env,
+		"Name":        a.ObjectMeta.Name,
+		"URL":         w.URL,
+		"Path":        w.Path,
+		"TLSSecret":   w.TLSSecret,
 	}
 }

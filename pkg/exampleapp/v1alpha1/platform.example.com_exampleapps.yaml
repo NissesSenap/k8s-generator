@@ -61,6 +61,10 @@ spec:
                 additionalProperties:
                   type: string
                 type: object
+              path:
+                type: string
+              tlsSecret:
+                type: string
               url:
                 type: string
               wildcardCert:
