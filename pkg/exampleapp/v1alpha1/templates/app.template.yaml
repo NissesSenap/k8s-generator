@@ -1,0 +1,31 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Name }}
+  labels:
+    name: {{ .Name }}
+    env: {{ .Environment }}
+    type: web
+spec:
+  replicas: {{ .Replicas }}
+  selector:
+    matchLabels:
+        name: {{ .Name }}
+        env: {{ .Environment }}
+        type: {{ .AppType }}
+  template:
+    metadata:
+      labels:
+        name: {{ .Name }}
+        env: {{ .Environment }}
+        type: {{ .AppType }}
+    spec:
+      containers:
+        - name: app
+          image: {{ .Image }}
+          args:
+            - web
+          env:
+            - name: ENV
+              value: {{ .Environment }}

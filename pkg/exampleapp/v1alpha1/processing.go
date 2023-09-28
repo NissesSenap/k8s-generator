@@ -6,7 +6,6 @@ package v1alpha1
 import (
 	"bytes"
 	"embed"
-	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -49,33 +48,12 @@ func (a *ExampleApp) Validate() error {
 
 func (a ExampleApp) Filter(items []*yaml.RNode) ([]*yaml.RNode, error) {
 	templates := make([]framework.ResourceTemplate, 0)
-	for _, worker := range a.Workloads.JobWorkers {
-		templates = append(templates, framework.ResourceTemplate{
-			Templates:    parser.TemplateFiles("templates/job_worker.template.yaml").FromFS(templateFS),
-			TemplateData: a.jobWorkerTemplateData(worker),
-		})
-	}
-	for _, worker := range a.Workloads.WebWorkers {
-		templates = append(templates, framework.ResourceTemplate{
-			Templates:    parser.TemplateFiles("templates/web_worker.template.yaml").FromFS(templateFS),
-			TemplateData: a.webWorkerTemplateData(worker),
-		})
-	}
+	templates = append(templates, framework.ResourceTemplate{
+		Templates:    parser.TemplateFiles("templates/app.template.yaml").FromFS(templateFS),
+		TemplateData: a.appTemplateData(a.App),
+	})
 
 	var patches []framework.PatchTemplate
-	if a.Datastores.PostgresInstance != "" {
-		templates = append(templates, framework.ResourceTemplate{
-			TemplateData: map[string]interface{}{"Name": a.Datastores.PostgresInstance},
-			Templates: parser.TemplateStrings(`apiVersion: apps.example.com/v1
-kind: PostgresSecretRequest
-metadata:
-  name: {{ .Name }}
-`)})
-		patches = append(patches, framework.PatchTemplate(&framework.ContainerPatchTemplate{
-			Templates:        parser.TemplateFiles("templates/postgres_secret_env_patch.template.yaml").FromFS(templateFS),
-			ContainerMatcher: framework.ContainerNameMatcher("app"),
-		}))
-	}
 
 	if len(a.Overrides.AdditionalResources) > 0 {
 		templates = append(templates, framework.ResourceTemplate{
@@ -140,65 +118,12 @@ func (a ExampleApp) resourceSMPsFromOverrides(resource string, i int, patches []
 	return patches, nil
 }
 
-type resourceBucket struct {
-	Requests resourceAllocation `yaml:"requests" json:"requests"`
-	Limits   resourceAllocation `yaml:"limits" json:"limits"`
-}
-
-type resourceAllocation struct {
-	CPU    string `yaml:"cpu" json:"cpu"`
-	Memory string `yaml:"memory" json:"memory"`
-}
-
-//nolint:gochecknoglobals
-var resourceBucketConversion = map[ResourceBinSize]resourceBucket{
-	"small": {
-		Requests: resourceAllocation{CPU: "100m", Memory: "128Mi"},
-		Limits:   resourceAllocation{CPU: "500m", Memory: "512Mi"},
-	},
-	"medium": {
-		Requests: resourceAllocation{CPU: "1", Memory: "1Gi"},
-		Limits:   resourceAllocation{CPU: "2", Memory: "2Gi"},
-	},
-	"large": {
-		Requests: resourceAllocation{CPU: "8", Memory: "8Gi"},
-		Limits:   resourceAllocation{CPU: "8", Memory: "8Gi"},
-	},
-}
-
-const anArbitraryMultiplier = 2
-
-func (a ExampleApp) jobWorkerTemplateData(w JobWorker) map[string]interface{} {
-	resourcesJson, err := json.Marshal(resourceBucketConversion[w.Resources])
-	if err != nil {
-		panic("failed to marshal resources for job worker" + err.Error())
-	}
-
+func (a ExampleApp) appTemplateData(w App) map[string]interface{} {
 	return map[string]interface{}{
-		"Name":            w.Name,
-		"AppImage":        a.AppImage,
-		"QueueList":       strings.Join(w.Queues, ","),
-		"ProcessPoolSize": len(w.Queues) * anArbitraryMultiplier,
-		"Resources":       string(resourcesJson),
-		"Replicas":        w.Replicas,
-		"Environment":     a.Env,
-	}
-}
-
-const containerPort = 8080
-
-func (a ExampleApp) webWorkerTemplateData(w WebWorker) map[string]interface{} {
-	resourcesJson, err := json.Marshal(resourceBucketConversion[w.Resources])
-	if err != nil {
-		panic("failed to marshal resources for web worker" + err.Error())
-	}
-
-	return map[string]interface{}{
-		"Name":        w.Name,
-		"AppImage":    a.AppImage,
-		"Resources":   string(resourcesJson),
-		"Replicas":    w.Replicas,
-		"Port":        containerPort,
+		"AppType":     w.AppType,
 		"Environment": a.Env,
+		"Image":       w.Image,
+		"Name":        a.ObjectMeta.Name,
+		"Replicas":    w.Replicas,
 	}
 }
