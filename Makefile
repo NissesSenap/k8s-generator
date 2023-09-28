@@ -18,7 +18,7 @@ $(MYGOBIN)/embedmd:
 
 .PHONY: example
 example: build
-	$(MYGOBIN)/app-fn pkg/exampleapp/testdata/success/basic/config.yaml
+	$(MYGOBIN)/app-fn pkg/exampleapp/v1alpha1/testdata/success/basic/config.yaml
 
 
 test: generate
