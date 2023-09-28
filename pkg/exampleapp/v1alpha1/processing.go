@@ -39,8 +39,8 @@ func (a *ExampleApp) Default() error {
 	if a.Ingress.Path == "" {
 		a.Ingress.Path = "/"
 	}
-	if a.Ingress.WildcardCert && a.Ingress.TLSSecret == "" {
-		a.Ingress.TLSSecret = "wilrdcar-tls"
+	if a.Ingress.TLSSecret == "" {
+		a.Ingress.TLSSecret = "wildcard-tls"
 	}
 	return nil
 }

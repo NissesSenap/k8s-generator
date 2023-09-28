@@ -67,8 +67,6 @@ spec:
                 type: string
               url:
                 type: string
-              wildcardCert:
-                type: boolean
             required:
             - url
             type: object

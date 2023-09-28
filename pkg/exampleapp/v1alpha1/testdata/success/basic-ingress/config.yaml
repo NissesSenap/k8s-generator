@@ -1,0 +1,12 @@
+apiVersion: platform.example.com/v1alpha1
+kind: ExampleApp
+metadata:
+  name: simple-app-sample
+env: production
+app:
+  appType:
+    - pubsub
+  image: registry.example.com/path/to/simple-app-sample
+  language: scala
+ingress:
+  url: hello.example.com

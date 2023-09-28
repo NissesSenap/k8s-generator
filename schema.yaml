@@ -45,7 +45,7 @@ spec:
     clustersecretstore: clustersecretstore-gke #default value
   ingress: # Only enabled if defined, if we change ingress we can easily change this api. Is the ingress API simple enough for us to not provide the whole thing?
     url: hello.example.com
-    wildcardCert: true # default, is a secret that exist in the same namespace
+    tlsSecret: "" # default, is a secret that exist in the same namespace
     annotation:
       ingressNginx: annotationsAreSoMuchFun
   iamPolicy:

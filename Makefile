@@ -20,6 +20,9 @@ $(MYGOBIN)/embedmd:
 example: build
 	$(MYGOBIN)/app-fn pkg/exampleapp/v1alpha1/testdata/success/basic/config.yaml
 
+.PHONY: example-ingress
+example-ingress: build
+	$(MYGOBIN)/app-fn pkg/exampleapp/v1alpha1/testdata/success/basic-ingress/config.yaml
 
 test: generate
 	go test -v -timeout 45m -cover ./...
