@@ -19,7 +19,9 @@ func New() framework.ResourceListProcessor {
 }
 
 func NewCommand() *cobra.Command {
-	return command.Build(New(), command.StandaloneEnabled, false)
+	cmd := command.Build(New(), command.StandaloneEnabled, false)
+	command.AddGenerateDockerfile(cmd)
+	return cmd
 }
 
 func processKnownAPIGroups(rl *framework.ResourceList) error {

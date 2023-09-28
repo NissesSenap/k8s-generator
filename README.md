@@ -6,8 +6,10 @@ I will use kustomize example as a [base](https://github.com/kubernetes-sigs/kust
 
 ## Generate dockerfile
 
+This is only needed to be run once.
+
 ```shell
-go run *.go gen .
+go run cmd/main.go gen .
 ```
 
 ## Run KRM
