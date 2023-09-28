@@ -62,7 +62,9 @@ func (a *ExampleApp) Validate() error {
 			return errors.Errorf("ingress %q must be in example.com or example.io", a.Ingress.URL)
 		}
 	}
-
+	if a.ObjectMeta.Namespace == "" {
+		return errors.Errorf("object.namespace must be defined")
+	}
 	return nil
 }
 
@@ -151,6 +153,7 @@ func (a ExampleApp) appTemplateData(w App) map[string]interface{} {
 		"Environment":           a.Env,
 		"Image":                 w.Image,
 		"Name":                  a.ObjectMeta.Name,
+		"Namespace":             a.ObjectMeta.Namespace,
 		"Replicas":              w.Replicas,
 		"ServiceAccountProject": w.IamPolicy.ServiceAccountProject,
 		"ServiceAccount":        w.IamPolicy.ServiceAccount,
@@ -161,6 +164,7 @@ func (a ExampleApp) ingressTemplateData(w Ingress) map[string]interface{} {
 	return map[string]interface{}{
 		"Environment": a.Env,
 		"Name":        a.ObjectMeta.Name,
+		"Namespace":   a.ObjectMeta.Namespace,
 		"URL":         w.URL,
 		"Path":        w.Path,
 		"TLSSecret":   w.TLSSecret,

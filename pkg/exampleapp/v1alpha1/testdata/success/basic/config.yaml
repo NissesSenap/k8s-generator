@@ -2,6 +2,7 @@ apiVersion: platform.example.com/v1alpha1
 kind: ExampleApp
 metadata:
   name: simple-app-sample
+  namespace: foo
 env: production
 app:
   appType:

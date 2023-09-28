@@ -1,3 +1,4 @@
 validation failure list:
+object.namespace must be defined
 ingress.dont-exist in body is a forbidden property
 \"hello.example.se\" must be in example.com or example.io
