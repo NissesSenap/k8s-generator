@@ -2,7 +2,7 @@ kind: service
 version: v1aplha1
 metadata:
   name: hello-world
-  label:
+  labels:
     team: platform
     service: hello
 spec:
@@ -48,10 +48,10 @@ spec:
     wildcardCert: true # default, is a secret that exist in the same namespace
     annotation:
       ingressNginx: annotationsAreSoMuchFun
-  # In deployment resource anything from app can be overwritten.
-  deployment:
-    containers:
-      - name: container2
-  keda: stuff # the entire api
   iamPolicy:
     servicAccount: overwriteMe # will automaitcally be the same as the application name + env prefix, ie: prod-hello-world
+  overrides:
+    additionalResources:
+      - keda.yaml
+    resourcePatches:
+      - deployment-web-worker-sidecar.yaml
