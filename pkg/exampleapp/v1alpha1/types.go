@@ -55,8 +55,10 @@ type App struct {
 }
 
 type IamPolicy struct {
+	// +optional
 	ServiceAccountProject string `json:"serviceAccountProject" yaml:"serviceAccountProject"`
-	ServiceAccount        string `json:"serviceAccount" yaml:"serviceAccount"`
+	// +optional
+	ServiceAccount string `json:"serviceAccount" yaml:"serviceAccount"`
 }
 
 type Ingress struct {
