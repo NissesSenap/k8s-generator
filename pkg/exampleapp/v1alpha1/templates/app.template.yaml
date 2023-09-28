@@ -4,22 +4,18 @@ kind: Deployment
 metadata:
   name: {{ .Name }}
   labels:
-    name: {{ .Name }}
+    app: {{ .Name }}
     env: {{ .Environment }}
-    type: web
+    type: {{ .AppType }}
 spec:
   replicas: {{ .Replicas }}
   selector:
     matchLabels:
-        name: {{ .Name }}
-        env: {{ .Environment }}
-        type: {{ .AppType }}
+        app: {{ .Name }}
   template:
     metadata:
       labels:
-        name: {{ .Name }}
-        env: {{ .Environment }}
-        type: {{ .AppType }}
+        app: {{ .Name }}
     spec:
       containers:
         - name: app

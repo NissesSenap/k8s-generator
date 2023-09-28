@@ -43,9 +43,9 @@ type ExampleApp struct {
 }
 
 type App struct {
-	// +optional
-	Image   string   `json:"Image" yaml:"Image"`
 	AppType []string `json:"appType" yaml:"appType"`
+	// +optional
+	Image string `json:"Image" yaml:"Image"`
 	// +kubebuilder:validation:Enum=scala;python;npm;rust;go
 	Language string `json:"Language" yaml:"Language"`
 	Replicas int    `json:"replicas" yaml:"replicas"`

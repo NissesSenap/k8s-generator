@@ -3,22 +3,8 @@ kind: ExampleApp
 metadata:
   name: simple-app-sample
 env: production
-workloads:
-  webWorkers:
-    - name: web-worker
-      domains:
-      - example.com
-  jobWorkers:
-    - name: job-worker
-      replicas: 10
-      resources: medium
-      queues:
-      - high
-      - medium
-      - low
-    - name: job-worker-2
-      replicas: 5
-      queues:
-      - bg2
-datastores:
-  postgresInstance: simple-app-sample-postgres
+app:
+  appType: pubsub
+  image: registry.example.com/path/to/simple-app-sample
+  language: scala
+  replicas: 3
