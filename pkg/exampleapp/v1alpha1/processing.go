@@ -39,6 +39,13 @@ func (a *ExampleApp) Default() error {
 			a.App.Replicas = 1
 		}
 	}
+	if a.App.IamPolicy.ServiceAccount == "" {
+		a.App.IamPolicy.ServiceAccount = a.ObjectMeta.Name
+	}
+
+	if a.App.IamPolicy.ServiceAccountProject == "" {
+		a.App.IamPolicy.ServiceAccountProject = "gke-project1"
+	}
 
 	if a.Ingress.Path == "" {
 		a.Ingress.Path = "/"
@@ -140,11 +147,13 @@ func (a ExampleApp) resourceSMPsFromOverrides(resource string, i int, patches []
 
 func (a ExampleApp) appTemplateData(w App) map[string]interface{} {
 	return map[string]interface{}{
-		"AppType":     w.AppType,
-		"Environment": a.Env,
-		"Image":       w.Image,
-		"Name":        a.ObjectMeta.Name,
-		"Replicas":    w.Replicas,
+		"AppType":               w.AppType,
+		"Environment":           a.Env,
+		"Image":                 w.Image,
+		"Name":                  a.ObjectMeta.Name,
+		"Replicas":              w.Replicas,
+		"ServiceAccountProject": w.IamPolicy.ServiceAccountProject,
+		"ServiceAccount":        w.IamPolicy.ServiceAccount,
 	}
 }
 

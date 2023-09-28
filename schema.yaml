@@ -38,6 +38,9 @@ spec:
         averageUtilization: 80
       pubsub: # will generate keda instead of hpa, this will probably be hard ^^
         waiting_msg: 20 # many options, maybe this should just be configured through the KEDA API
+    iamPolicy:
+      serviceAccountProject: gke-project1
+      servicAccount: overwriteMe # will automaitcally be the same as the application name + env prefix, ie: prod-hello-world
   secret:
     remoteName: ninjagcpSecret
     secretKey: creds.json
@@ -48,8 +51,6 @@ spec:
     tlsSecret: "" # default, is a secret that exist in the same namespace
     annotation:
       ingressNginx: annotationsAreSoMuchFun
-  iamPolicy:
-    servicAccount: overwriteMe # will automaitcally be the same as the application name + env prefix, ie: prod-hello-world
   overrides:
     additionalResources:
       - keda.yaml

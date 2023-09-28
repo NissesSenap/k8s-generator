@@ -23,3 +23,11 @@ spec:
           env:
             - name: ENV
               value: {{ .Environment }}
+      serviceAccountName: {{ .ServiceAccount }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .ServiceAccount }}
+  annotations:
+    iam.gke.io/gcp-service-account: {{ .Name }}@{{ .ServiceAccountProject }}.iam.gserviceaccount.com

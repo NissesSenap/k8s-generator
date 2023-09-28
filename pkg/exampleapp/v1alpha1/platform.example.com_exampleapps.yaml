@@ -32,6 +32,17 @@ spec:
                 items:
                   type: string
                 type: array
+              iamPolicy:
+                additionalProperties: false
+                properties:
+                  serviceAccount:
+                    type: string
+                  serviceAccountProject:
+                    type: string
+                required:
+                - serviceAccount
+                - serviceAccountProject
+                type: object
               image:
                 type: string
               language:

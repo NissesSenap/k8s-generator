@@ -50,6 +50,13 @@ type App struct {
 	Language string `json:"language" yaml:"language"`
 	// +optional
 	Replicas int `json:"replicas" yaml:"replicas"`
+	// +optional
+	IamPolicy IamPolicy `json:"iamPolicy" yaml:"iamPolicy"`
+}
+
+type IamPolicy struct {
+	ServiceAccountProject string `json:"serviceAccountProject" yaml:"serviceAccountProject"`
+	ServiceAccount        string `json:"serviceAccount" yaml:"serviceAccount"`
 }
 
 type Ingress struct {
